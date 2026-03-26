@@ -1,0 +1,23 @@
+#!/bin/bash
+set -e
+
+case "$1" in
+    purge)
+        # 删除用户和组（仅在无其他包使用时）
+        if getent passwd vernemq >/dev/null 2>&1; then
+            userdel vernemq 2>/dev/null || true
+        fi
+        
+        if getent group vernemq >/dev/null 2>&1; then
+            groupdel vernemq 2>/dev/null || true
+        fi
+        ;;
+    remove|upgrade|abort-install|abort-upgrade|disappear)
+        ;;
+    *)
+        echo "postrm called with unknown argument \`$1'" >&2
+        exit 1
+        ;;
+esac
+
+exit 0

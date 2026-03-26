@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e
+
+# 检查是否已存在 vernemq 用户
+if getent passwd vernemq >/dev/null 2>&1; then
+    echo "User vernemq already exists, skipping creation"
+else
+    useradd -s /bin/bash -d /var/lib/vernemq -m vernemq
+fi
+
+exit 0

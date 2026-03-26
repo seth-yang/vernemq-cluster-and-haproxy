@@ -1,0 +1,11 @@
+Package: vernemq
+Version: 1.13.0-1
+Section: net
+Priority: optional
+Architecture: amd64
+Depends: adduser, systemd, libsnappy-dev, libssl-dev
+Maintainer: Your Name <your.email@example.com>
+Description: VerneMQ MQTT Broker
+ VerneMQ is a high-performance, distributed MQTT message broker.
+ It scales horizontally and vertically on commodity hardware.
+Homepage: https://vernemq.com/

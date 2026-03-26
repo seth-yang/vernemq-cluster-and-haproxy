@@ -1,0 +1,61 @@
+[Unit]
+Description=VerneMQ MQTT Broker
+Documentation=https://vernemq.com/
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=forking
+User=vernemq
+Group=vernemq
+
+# 设置工作目录
+WorkingDirectory=/var/lib/vernemq/1.13.0
+Environment=HOME=/var/lib/vernemq/1.13.0
+Environment=VERNEMQ_CONFIG=/var/lib/vernemq/1.13.0/etc/vernemq.conf
+
+# 假设您的 vernemq 启动脚本在 bin/ 目录下
+ExecStart=/var/lib/vernemq/1.13.0/bin/vernemq start
+ExecStop=/var/lib/vernemq/1.13.0/bin/vernemq stop
+ExecReload=/var/lib/vernemq/1.13.0/bin/vernemq restart
+
+# PID 文件路径（根据您的 vernemq 配置调整）
+PIDFile=/var/run/vernemq/vernemq.pid
+
+# 重启策略
+Restart=on-failure
+RestartSec=5s
+StartLimitInterval=60s
+StartLimitBurst=3
+
+# 资源限制
+LimitNOFILE=65536
+LimitNPROC=4096
+
+# 日志配置
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=vernemq
+
+# 安全选项
+ProtectSystem=strict
+PrivateTmp=true
+NoNewPrivileges=true
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectControlGroups=yes
+PrivateDevices=yes
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+
+# 创建必要的运行时目录
+RuntimeDirectory=vernemq
+RuntimeDirectoryMode=0750
+StateDirectory=vernemq
+StateDirectoryMode=0750
+LogsDirectory=vernemq
+LogsDirectoryMode=0750
+ConfigurationDirectory=vernemq
+ConfigurationDirectoryMode=0750
+
+[Install]
+WantedBy=multi-user.target

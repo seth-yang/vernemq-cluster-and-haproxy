@@ -1,0 +1,38 @@
+#!/bin/bash
+set -e
+VER=1.13.0
+ROOT=/var/lib/vernemq/$VER
+
+case "$1" in
+    configure)
+        # 设置目录权限
+        chown -R vernemq:vernemq $ROOT
+        chmod 755 $ROOT
+	chmod +x $ROOT/bin/*
+	chmod +x $ROOT/lib/inets-9.3.2/priv/bin/*
+	chmod +x $ROOT/lib/mysql-1.8.0/priv/bin/*
+	chmod +x $ROOT/lib/os_mon-2.10.1/priv/bin/*
+
+	mkdir /var/run/vernemq /var/log/vernemq
+	chown vernemq:vernemq /var/run/vernemq
+	chown vernemq:vernemq /var/log/vernemq
+        
+        # 启用并启动 systemd 服务
+        systemctl daemon-reload
+        systemctl enable vernemq.service
+        systemctl start vernemq.service || true
+        
+        echo "VerneMQ ${VER} has been installed successfully."
+        echo "Service: vernemq"
+        echo "User: vernemq (uid: $(id -u vernemq))"
+        echo "Config: ${ROOT}/vernemq.conf"
+        ;;
+    abort-upgrade|abort-remove|abort-deconfigure)
+        ;;
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+        ;;
+esac
+
+exit 0
